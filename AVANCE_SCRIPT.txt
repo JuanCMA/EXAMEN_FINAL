@@ -1,0 +1,138 @@
+--TABLA CATEGORIA
+CREATE TABLE CATEGORIA(
+id_categoria NUMBER,
+nombre_categoria VARCHAR2(40),
+descripcion_cat  VARCHAR2(200),
+constraint pk_ica primary key(id_categoria)
+)
+--TABLA PRODUCTOS - CATEGORIA
+CREATE TABLE PRODUCTO_CATEGORIA(
+id_categoria1 NUMBER,
+id_producto1 NUMBER,
+constraint fk_ica1 foreign key (id_categoria1) references CATEGORIA(id_categoria),
+constraint  fk_ipro1 foreign key(id_producto1) references PRODUCTOS(id_producto)
+)
+--TABLA PRODUCTOS
+CREATE TABLE PRODUCTOS(
+id_producto NUMBER,
+nombre_producto VARCHAR2(35),
+precio_unitario NUMBER,
+unidades_en_stock NUMBER,
+unidades_pedida NUMBER,
+descatalogado VARCHAR2(12), 
+constraint pk_ipro primary key(id_producto)
+)
+--TABLA PRODUCTO-PROVEEDORES
+CREATE TABLE PRODUCTOS_PROVEEDORES(
+id_producto2 NUMBER,
+id_proveedores1 NUMBER,
+constraint fk_ipro2 foreign key (id_producto2) references PRODUCTOS (id_producto),
+constraint fk_iprov1 foreign key (id_proveedores1) references PROVEEDORES(id_proveedores)
+
+)
+--TABLA PROVEEDORES
+CREATE TABLE PROVEEDORES (
+id_proveedores NUMBER,
+nombre_proveedor VARCHAR2(50),
+nombre_contacto VARCHAR2(50),
+puesto_contacto VARCHAR2(45),
+direccion VARCHAR2(40),
+localidad VARCHAR2(45),
+estado VARCHAR2(50),
+cod_postal NUMBER,
+telefono VARCHAR2(40),
+constraint pk_iprov primary key(id_proveedores)
+)
+--TABLA CLIENTE
+CREATE TABLE CLIENTE(
+id_cliente  NUMBER,
+nombre_cliente VARCHAR2(45),
+apellido_cliente VARCHAR2(40),
+direccion_cliente VARCHAR2(35),
+localidad_cliente VARCHAR2(50),
+region_cliente VARCHAR2(60),
+cos_postal_cliente NUMBER,
+pais_cliente VARCHAR2(30),
+Telefono_cliente VARCHAR2(9),
+constraint pk_icli primary key(id_cliente)
+)
+--TABLA PEDIDOS--- FALTA
+CREATE TABLE PEDIDOS(
+id_pedido NUMBER,
+id_cliente1 NUMBER,
+id_empleado1 NUMBER,
+fecha_pedido DATE,
+fecha_envio DATE,
+ruta_envio VARCHAR2(35),
+FECHA_OBJETIVA Date,
+id_transportista1 NUMBER,
+constraint pk_ipe primary key(id_pedido),
+constraint fk_icli1 foreign key (id_cliente1) references CLIENTE(id_cliente),
+constraint fk_emp1 foreign key(id_empleado1) references EMPLEADOS(id_empleado),
+constraint fk_itrans1 foreign key(id_transportista1) references TRANSPORTISTAS(id_transportista)
+)
+--TABLA EMPLEADOS
+CREATE TABLE EMPLEADOS(
+id_empleado NUMBER,
+nombre_empleado VARCHAR2(25),
+apellido_empleado VARCHAR(35),
+puesto_empleado VARCHAR(45),
+direccion_empleado VARCHAR2(45),
+localidad VARCHAR2(40),
+estado VARCHAR2(15),
+cod_postal NUMBER,
+telefono VARCHAR2(9),
+fecha_nacimiendo DATE,
+fecha_contratacion DATE,
+constraint pk_iemp primary key(id_empleado)
+)
+--TABLA TRANSPORTISTAS 
+CREATE TABLE TRANSPORTISTAS(
+id_transportista NUMBER,
+commpañia VARCHAR2(40),
+contacto VARCHAR2(50),
+direccion VARCHAR2(60),
+localidad VARCHAR2(40),
+estado VARCHAR(15),
+cod_postal NUMBER,
+telefono VARCHAR2(9),
+constraint pk_itrans primary key(id_transportista)
+)
+--TABLA DETALLE-PRODUCTO
+CREATE TABLE DETALLE_PRODUCTO(
+id_detalle VARCHAR2(50),
+cantidad NUMBER,
+descuento NUMBER,
+id_pedido1 NUMBER,
+id_producto3 NUMBER,
+constraint pk_idet primary key (id_detalle),
+constraint fk_ipe1 foreign key(id_pedido1) references PEDIDOS(id_pedido),
+constraint fk_ipro3 foreign key (id_producto3) references PRODUCTOS(id_producto) 
+)
+
+--------------------------------------------------------------------------------------------
+--INSERTANDO DATOS EN CLIENTES
+insert into CLIENTE values(11,'JOSE','MORALES','PEDRO MONERNO','CHINCHA','ICA',051,'PERU',956535323);
+insert into CLIENTE values(12,'JUAN','PEREZ','PUEBLO NUEVO','CHINCHA','ICA',051,'PERU',945254698);
+insert into CLIENTE values(13,'MARIA','UCULMANA','AYABCA','ICA','ICA',051,'PERU',956124873);
+insert into CLIENTE values(14,'KARINA','PACHAS','MIRAFLORES','LIMA','LIMA',051,'PERU',980154870);
+insert into CLIENTE values(15,'PAOLO','MONTALVAN','CHOSICA','LIMA','LIMA',051,'PERU',972001248);
+insert into CLIENTE values(16,'JOAQUIN','PARIONA','ALTO LARAN','CHINCHA','ICA',051,'PERU',956067849);
+insert into CLIENTE values(17,'ANA','SANCHEZ','LA TINGUIÑA','ICA','ICA',051,'PERU',956998420);
+insert into CLIENTE values(18,'JACOBO','MELENDEZ','PARACAS','PISCO','ICA',051,'PERU',945115478);
+insert into CLIENTE values(19,'CELESTE','JUAREZ','MARCONA','NAZCA','ICA',051,'PERU',972356478);
+insert into CLIENTE values(20,'MICHAEL','MARCOS','GROCIO PRADO','CHINCHA','ICA',051,'PERU',9404875294);
+
+--INSERTANDO DATOS EN CATEGORIA
+insert into CATEGORIA values(21,'CARNES Y EMBUTIDOS','CATEGORIA COMPUESTA POR UNA GRAN VARIEDAD DE CARNES');
+insert into CATEGORIA values(22,'FRUTAS Y VERDURAS','FRUTAS FRESCAS DE IMPORTACION');
+insert into CATEGORIA values(23,'PAN Y DULCES','CON UNA GRAN VARIEDAD DE PAN ');
+insert into CATEGORIA values(24,'LACTEOS','DE BUENA CALIDAD');
+insert into CATEGORIA values(25,'PASTAS','DE ALTA CALIDAD');
+insert into CATEGORIA values(26,'COMIDAS PREPARADAS','SE NECESITA PONER EN  MICROONDAS');
+insert into CATEGORIA values(27,'BEBIDAS','DE MARCAS RECONOCIDAS');
+insert into CATEGORIA values(28,'APERITIVOS','EXQUISITOS ');
+insert into CATEGORIA values(29,'LIMPIEZA','PARA LA CASA');
+insert into CATEGORIA values(30,'COSMETICA','PARA DAMAS');
+
+--INSERTANDO DATOS EN PRODUCTOS
