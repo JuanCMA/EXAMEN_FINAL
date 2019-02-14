@@ -1,0 +1,1008 @@
+------------------
+PAQUETE CATEGORIA 
+------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_CATEGORIA
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR(
+
+PR_id_categoria IN CATEGORIA.id_categoria%TYPE,
+
+PRO_nombre_categoria IN CATEGORIA.nombre_categoria%TYPE,
+
+PR_descripcion IN CATEGORIA.descripcion%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+);
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+PR_id_categoria IN CATEGORIA.id_categoria%TYPE,
+
+PRO_nombre_categoria IN CATEGORIA.nombre_categoria%TYPE,
+
+PR_descripcion IN CATEGORIA.descripcion%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR(
+PR_id_categoria  IN  CATEGORIA.id_categoria%TYPE;
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+);
+
+--PREOCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER(
+
+PR_id_categoria  IN CATEGORIA.id_categoria%TYPE
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARHCAR2
+);
+
+END PACK_CATEGORIA;
+
+----------------------------------------------RESTRICCION
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_CATEGORIA
+
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR(
+
+PR_id_categoria IN CATEGORIA.id_categoria%TYPE,
+
+PRO_nombre_categoria IN CATEGORIA.nombre_categoria%TYPE,
+
+PR_descripcion IN CATEGORIA.descripcion%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+IS
+ 
+ V_VERIFICADOR NUMBER:= 0;
+BEGIN 
+
+-- DUPLICACION DE CATEGORIA 
+
+SELECT COUNT(*) INTO V_VERIFICADOR 
+FROM  SCOOT.CATEGORIA
+ WHERE id_categoria=PR_id_categoria;
+
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_ERROR(-200001,'CODIGO CATEGORIA DUPLICADO');
+END IF;
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPU.PUT_LINE('SIN DEVOLVER');
+
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERRO');
+END;
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+PR_id_categoria IN CATEGORIA.id_categoria%TYPE,
+
+PRO_nombre_categoria IN CATEGORIA.nombre_categoria%TYPE,
+
+PR_descripcion IN CATEGORIA.descripcion%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+IS
+
+V_VERIFICADOR NUMER :=0;
+
+BEGIN
+
+--VERIFICANDO PARA LA ACTUALIZACION
+
+SELECT COUNT(*) INTO V_VERIFICADOR
+
+FROM SCOOT.CATEGORIA 
+
+WHERE id_categoria=PR_id_categoria;
+
+IF(V_VERIFICAR = 0)
+THEN 
+RAISE_APPLICATION_ERRO(-20002,'NO ENOCONTRAD');
+END IF;
+
+--ACTUALIZANDO
+
+UPDATE SCOOT.CATEGORIA SET 
+
+nombre_categoria    =  PR_nombre_categoria,
+ 
+descripcion         = PR_descripcion
+
+WHERE id_categoria=PR_id_categoria;
+
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPU.PUT_LINE('SIN ACTUALIZAR');
+
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
+END;
+
+
+-------ELIMINANDO 
+
+PROCEDURE ELIMINAR(
+PR_id_categoria  IN  CATEGORIA.id_categoria%TYPE;
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+);
+
+IS
+
+V_VERIFICADOR = 0;
+
+BEGIN
+
+--VALIDANDO CODIGO 
+
+SELECT COUNT(*) INTO V_VERIFICADOR 
+
+FROM SCOTT.CATEGORIA 
+
+WHERE id_categoria=PR_id_categoria;
+
+IF (V_VERIFICADOR=0 )
+THEN
+
+RAISE_APPLICATION_ERROR(-20003,'SIN CLIENTE');
+
+END IF;
+
+--ELIMINANDO REGISTRO
+
+DELETE FROM SCOTT.CATEGORIA 
+WHERE id_categori=PR_id_categoria;
+
+
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPU.PUT_LINE('SIN ELIMINAR');
+
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
+
+END;
+
+------OBTENIENDO
+
+
+
+
+
+
+
+--------------------------
+PAQUETE PRODUCTO_CATEGORIA 
+--------------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_PRODUCTO_CATEGORIA
+AS
+
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR(
+
+PR_id_categoria1 IN PRODUCTO_CATEGORIA.id_categoria1%TYPE,
+
+PR_id_producto1 IN PRODUCTO_CATEGORIA.id_producto1%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE   OUT  VARCHAR
+);
+
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PRECEDURE ACTUALIZAR
+(
+PR_id_categoria1 IN PRODUCTO_CATEGORIA.id_categoria1%TYPE,
+
+PR_id_producto1 IN PRODUCTO_CATEGORIA.id_producto1%TYPE,
+);
+
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR
+(
+PR_id_categoria1 IN PRODUCTO_CATEGORIA.id_categoria1%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE   OUT  VARCHAR
+);
+
+
+--PROCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER
+(
+PR_id_categoria1 IN PRODUCTO_CATEGORIA.id_categoria1%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE   OUT  VARCHAR
+
+);
+
+END PACK_PRODUCTO_CATEGORIA;
+
+------------------
+PAQUETE PRODUCTOS
+------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_PRODUCTO_CATEGORIA
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR(
+
+PR_id_producto IN PRODUCTO.id_producto%TYPE,
+ 
+PR_nombre_producto IN PRODUCTO.nombre_producto%TYPE,
+
+PR_precio_unitario IN PRODUCTO.precio_unitario%TYPE,
+
+PR_unidades_en_stock IN  PRODCUTO.unidades_en_stock%TYPE,
+
+PR_unidades_pedida IN PRODUCTO.unidades_pedida%TYPE,
+
+PR_descatalogado IN PRODUCTO.descatalogado%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+PR_id_producto IN PRODUCTO.id_producto%TYPE,
+ 
+PR_nombre_producto IN PRODUCTO.nombre_producto%TYPE,
+
+PR_precio_unitario IN PRODUCTO.precio_unitario%TYPE,
+
+PR_unidades_en_stock IN  PRODCUTO.unidades_en_stock%TYPE,
+
+PR_unidades_pedida IN PRODUCTO.unidades_pedida%TYPE,
+
+PR_descatalogado IN PRODUCTO.descatalogado%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR(
+PR_id_producto IN PRODUCTO.id_producto%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+);
+
+--PROCEDIMIENTO OBTENER
+
+(
+PR_id_producto IN PRODUCTO.id_producto%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+END PACK_PRODUCTO_CATEGORIA;
+
+
+----------------------------
+PAQUETE PRODUCTO-PROVEEDORES 
+----------------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_PRODUCTO_PROVEEDORES
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR(
+
+PR_id_producto2   IN PRODUCTO_PROVEEDORES.id_producto2%TYPE
+
+PR_id_proveedores1 IN PRODUCTO_PROVEEDORES.id_proveedores1%TYPE
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR(
+
+PR_id_producto2   IN PRODUCTO_PROVEEDORES.id_producto2%TYPE
+
+PR_id_proveedores1 IN PRODUCTO_PROVEEDORES.id_proveedores1%TYPE
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+
+PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR
+(
+
+PR_id_producto2   IN PRODUCTO_PROVEEDORES.id_producto2%TYPE
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+)
+
+--PROCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER
+(
+
+PR_id_producto2   IN PRODUCTO_PROVEEDORES.id_producto2%TYPE
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+END PACK_PRODUCTO_PROVEEDORES;
+
+------------------
+PAQUETE PROVEEDORES
+------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_PROVEEDORES
+
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR
+(
+
+PR_id_proveedores IN PROVEEDORES.id_proveedores%TYPE,
+
+PR_nombre_proveedor  IN PROVEEDORES.nombre_proveedor%TYPE,
+
+PR_nombre_contacto IN PROVEEDORES.nombre_contacto%TYPE,
+
+PR_puesto_contacto IN PROVEEDORES.puesto_contacto%TYPE,
+
+PR_direccion IN PROVEEDORES.direccion%TYPE,
+
+PR_localidad IN PROVEEDORES.localidad%TYPE,
+
+PR_estado IN PROVEEDORES.estado%TYPE,
+
+PR_cod_postal IN PROVEEDORES.cod_postal%TYPE,
+
+PR_telefono IN PROVEEDORES.telefono%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+
+PR_id_proveedores IN PROVEEDORES.id_proveedores%TYPE,
+
+PR_nombre_proveedor  IN PROVEEDORES.nombre_proveedor%TYPE,
+
+PR_nombre_contacto IN PROVEEDORES.nombre_contacto%TYPE,
+
+PR_puesto_contacto IN PROVEEDORES.puesto_contacto%TYPE,
+
+PR_direccion IN PROVEEDORES.direccion%TYPE,
+
+PR_localidad IN PROVEEDORES.localidad%TYPE,
+
+PR_estado IN PROVEEDORES.estado%TYPE,
+
+PR_cod_postal IN PROVEEDORES.cod_postal%TYPE,
+
+PR_telefono IN PROVEEDORES.telefono%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR
+(
+
+PR_id_proveedores IN PROVEEDORES.id_proveedores%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO OBTENER
+
+
+PROCEDURE OBTENER
+(
+
+PR_id_proveedores IN PROVEEDORES.id_proveedores%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+END PACK_PROVEEDORES;
+
+------------------
+PAQUETE CLIENTE
+------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_CLIENTE
+
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR
+(
+
+PR_id_cliente IN CLIENTE.id_cliente%TYPE,
+
+PR_nombre_cliente IN CLIENTE.nombre_cliente%TYPE,
+
+PR_apellido_cliente IN CLIENTE.apellido_cliente%TYPE,
+
+PR_direccion_cliente IN CLIENTE.direccion_cliente%TYPE,
+
+PR_localidad_cliente IN CLIENTE.localidad_cliente%TYPE
+
+PR_region_cliente IN CLIENTE.region_cliente%TYPE,
+
+PR_cos_postal_cliente IN CLIENTE.cos_postal_cliente%TYPE,
+
+PR_pais_cliente IN CLIENTE.pais_cliente%TYPE,
+
+PR_Telefono_cliente IN CLIENTE.Telefono_cliente%TYPE
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+
+PR_id_cliente IN CLIENTE.id_cliente%TYPE,
+
+PR_nombre_cliente IN CLIENTE.nombre_cliente%TYPE,
+
+PR_apellido_cliente IN CLIENTE.apellido_cliente%TYPE,
+
+PR_direccion_cliente IN CLIENTE.direccion_cliente%TYPE,
+
+PR_localidad_cliente IN CLIENTE.localidad_cliente%TYPE
+
+PR_region_cliente IN CLIENTE.region_cliente%TYPE,
+
+PR_cos_postal_cliente IN CLIENTE.cos_postal_cliente%TYPE,
+
+PR_pais_cliente IN CLIENTE.pais_cliente%TYPE,
+
+PR_Telefono_cliente IN CLIENTE.Telefono_cliente%TYPE
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR
+(
+
+PR_id_cliente IN CLIENTE.id_cliente%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER
+
+(
+
+PR_id_cliente IN CLIENTE.id_cliente%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+END PACK_CLIENTE;
+
+
+------------------
+PAQUETE PEDIDOS
+------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_PEDIDOS
+AS
+
+--PROCEDIMIENTO INSERTAR 
+
+PROCEDURE INSERTAR
+(
+
+PR_id_pedido IN PEDIDOS.id_pedido%TYPE,
+
+PR_id_cliente1 IN PEDIDOS.id_cliente1%TYPE,
+
+PR_id_empleado1 IN PEDIDOS.id_empleado1%TYPE,
+
+PR_fecha_pedido IN PEDIDOS.fecha_pedido%TYPE,
+
+PR_fecha_envio IN PEDIDOS.fecha_envio%TYPE,
+
+PR_ruta_envio IN PEDIDOS.ruta_envio%TYPE,
+
+PR_FECHA_OBJETIVA IN PEDIDOS.FECHA_OBJETIVA%TYPE,
+
+PR_id_transportista1 IN PEDIDOS.id_transportista1%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+
+);
+
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR 
+(
+
+PR_id_pedido IN PEDIDOS.id_pedido%TYPE,
+
+PR_id_cliente1 IN PEDIDOS.id_cliente1%TYPE,
+
+PR_id_empleado1 IN PEDIDOS.id_empleado1%TYPE,
+
+PR_fecha_pedido IN PEDIDOS.fecha_pedido%TYPE,
+
+PR_fecha_envio IN PEDIDOS.fecha_envio%TYPE,
+
+PR_ruta_envio IN PEDIDOS.ruta_envio%TYPE,
+
+PR_FECHA_OBJETIVA IN PEDIDOS.FECHA_OBJETIVA%TYPE,
+
+PR_id_transportista1 IN PEDIDOS.id_transportista1%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+
+);
+
+
+--PROCEDIMIENTO ELIMINAR
+(
+
+PR_id_pedido IN PEDIDOS.id_pedido%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER
+(
+
+PR_id_pedido IN PEDIDOS.id_pedido%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+END PACK_PEDIDOS;
+
+------------------
+PAQUETE EMPLEADOS
+------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_EMPLEADOS
+AS
+
+--PROCEDIMIENTO INSERTAR 
+
+PROCEDURE INSERTAR
+(
+
+PR_id_empleado IN EMPLEADOS.id_empleado%TYPE,
+
+PR_nombre_empleado IN EMPLEADOS.nombre_empleado%TYPE,
+
+PR_apellido_empleado IN EMPLEADOS.apellido_empleado%TYPE,
+
+PR_puesto_empleado IN EMPLEADOS.puesto_empleado%TYPE,
+
+PR_direccion_empleado IN EMPLEADOS.direccion_empleado%TYPE,
+
+PR_localidad IN EMPLEADOS.localidad%TYPE,
+
+PR_estado IN EMPLEADOS.estado%TYPE,
+
+PR_cod_postal IN EMPLEADOS.cod_postal%TYPE,
+
+PR_telefono IN EMPLEADOS.telefono%TYPE,
+
+PR_fecha_nacimiento IN EMPLEADOS.fecha_nacimiento%TYPE,
+
+PR_fecha_contratacion IN EMPLEADOS.fecha_contratacion%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR 
+(
+
+PR_id_empleado IN EMPLEADOS.id_empleado%TYPE,
+
+PR_nombre_empleado IN EMPLEADOS.nombre_empleado%TYPE,
+
+PR_apellido_empleado IN EMPLEADOS.apellido_empleado%TYPE,
+
+PR_puesto_empleado IN EMPLEADOS.puesto_empleado%TYPE,
+
+PR_direccion_empleado IN EMPLEADOS.direccion_empleado%TYPE,
+
+PR_localidad IN EMPLEADOS.localidad%TYPE,
+
+PR_estado IN EMPLEADOS.estado%TYPE,
+
+PR_cod_postal IN EMPLEADOS.cod_postal%TYPE,
+
+PR_telefono IN EMPLEADOS.telefono%TYPE,
+
+PR_fecha_nacimiento IN EMPLEADOS.fecha_nacimiento%TYPE,
+
+PR_fecha_contratacion IN EMPLEADOS.fecha_contratacion%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+
+--PROCEDIMIENTO ELIMINAR
+(
+
+PR_id_empleado IN EMPLEADOS.id_empleado%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER
+(
+PR_id_empleado IN EMPLEADOS.id_empleado%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+END PACK_EMPLEADOS;
+
+-----------------------
+PAQUETE TRANSPORTISTAS
+-----------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_TRANSPORTISTAS
+AS
+
+--PROCEDIMIENTO INSERTAR 
+
+PROCEDURE INSERTAR
+(
+
+PR_id_transportista IN TRANSPORTISTAS.id_transportista%TYPE,
+
+PR_compañia IN TRANSPORTISTAS.compañia%TYPE,
+
+PR_contacto IN TRANSPORTISTAS.contacto%TYPE,
+
+PR_direccion IN TRANSPORTISTAS.direccion%TYPE,
+
+PR_localidad IN TRANSPORTISTAS.localidad%TYPE,
+
+PR_estado IN TRANSPORTISTAS.estado%TYPE,
+
+PR_cod_postal IN TRANSPORTISTAS.cod_postal%TYPE,
+
+PR_telefono IN TRANSPORTISTAS.telefono%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR 
+(
+
+PR_id_transportista IN TRANSPORTISTAS.id_transportista%TYPE,
+
+PR_compañia IN TRANSPORTISTAS.compañia%TYPE,
+
+PR_contacto IN TRANSPORTISTAS.contacto%TYPE,
+
+PR_direccion IN TRANSPORTISTAS.direccion%TYPE,
+
+PR_localidad IN TRANSPORTISTAS.localidad%TYPE,
+
+PR_estado IN TRANSPORTISTAS.estado%TYPE,
+
+PR_cod_postal IN TRANSPORTISTAS.cod_postal%TYPE,
+
+PR_telefono IN TRANSPORTISTAS.telefono%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+
+);
+
+
+--PROCEDIMIENTO ELIMINAR
+(
+
+PR_id_transportista IN TRANSPORTISTAS.id_transportista%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER
+(
+
+PR_id_transportista IN TRANSPORTISTAS.id_transportista%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+);
+
+END PACK_TRANSPORTISTAS;
+
+-------------------------
+PAQUETE DETALLE_PRODUCTO
+-------------------------
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_DETALLE_PRODUCTO
+AS
+
+
+--PROCEDIMIENTO INSERTAR 
+
+PROCEDURE INSERTAR
+(
+
+PR_id_detalle IN DETALLE_PRODUCTO.id_detalle,
+
+PR_cantidad IN DETALLE_PRODUCTO.cantidad%TYPE,
+
+PR_descuento IN DETALLE_PRODUCTO.descuento%TYPE,
+
+PR_id_pedido1 IN DETALLE_PRODUCTO.id_pedido1%TYPE,
+
+PR_id_producto3 IN DETALLE_PRODUCTO.id_producto3%TYPE
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR 
+(
+PR_id_detalle IN DETALLE_PRODUCTO.id_detalle,
+
+PR_cantidad IN DETALLE_PRODUCTO.cantidad%TYPE,
+
+PR_descuento IN DETALLE_PRODUCTO.descuento%TYPE,
+
+PR_id_pedido1 IN DETALLE_PRODUCTO.id_pedido1%TYPE,
+
+PR_id_producto3 IN DETALLE_PRODUCTO.id_producto3%TYPE
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+);
+
+
+--PROCEDIMIENTO ELIMINAR
+(
+
+PR_id_detalle IN DETALLE_PRODUCTO.id_detalle,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+--PROCEDIMIENTO OBTENER
+
+PROCEDURE OBTENER
+(
+
+PR_id_detalle IN DETALLE_PRODUCTO.id_detalle,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+
+);
+
+
+
+
+SELECT COUNT(*) INTO V_CONTADOR 
+		FROM VENTASPLSQL.PRODUCTO
+  	WHERE CODPROD = P_CODPROD;
+  IF (V_CONTADOR > 0) THEN
+    RAISE_APPLICATION_ERROR(-20001, 'CODIGO DUPLICADO DE PRODUCTO');
+  END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
