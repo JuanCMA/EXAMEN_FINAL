@@ -1,0 +1,106 @@
+//MOSTRANDO EL DATO DE PRODUCTOS
+
+CREATE OR REPLACE PROCEDURE SCOTT.PROC_SIMPLE
+(
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
+
+PR_nombre_producto OUT PRODUCTOS.nombre_producto%TYPE,
+
+PR_precio_unitario  OUT PRODUCTOS.precio_unitario%TYPE,
+
+PR_unidades_en _stock OUT PRODUCTOS.unidades_en_stock%TYPE,
+
+PR_unidades_pedida OUT PRODUCTOS.unidades_pedidas%TYPE,
+
+PR_descatalogado OUT PRODUCTOS.descatalogado%TYPE
+
+)
+
+AS
+
+
+BEGIN
+SELECT id_producto,nombre_producto,precio_unitario,unidades_en_stock
+,unidades_pedidas,descatalogado INTO 
+
+PR_id_producto,PR_nombre_producto,PR_precio_unitario,
+PR_unidades_en_stock,PR_unidades_pedidas,PR_descatalogado
+
+FROM SCOTT.PRODUCTOS;
+
+WHERE PR_id_producto= id_producto
+
+IF(precio_unitario > 15) THEN
+   precio_unitario=precio_unitario*13
+   dbms_output.put_line(precio_unitario);
+   else
+    raise_applicatio_error(-20007,'fuera de rango');
+
+END IF;
+
+EXCEPTION
+WHEN_NO_DATA_FOUND THEN
+
+RAISE_APPLICATION_ERROR(-20001,'NO REGISTRADO');
+
+
+END;
+
+------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE SCOTT.PROC_SIMPLE2
+(
+
+PR_id_empleado IN PRODUCTOS.id_empleado%TYPE,
+
+PR_nombre_empleado OUT PRODUCTOS.nombre_empleado%TYPE,
+
+PR_apellido_empleado OUT PRODUCTOS.apellido_empleado%TYPE,
+
+PR_puesto_empleado OUT PRODUCTOS.puesto_empleado%TYPE,
+
+PR_direccion_empleado OUT PRODUCTOS.direccion_empleado%TYPE,
+
+PR_localidad OUT PRODUCTOS.localidad%TYPE,
+
+PR_estado OUT PRODUCTOS.estado%TYPE,
+
+PR_cod_postal OUT PRODUCTOS.cod_postal%TYPE,
+ 
+PR_telefono OUT PRODUCTOS.telefono%TYPE,
+
+PR_fecha_nacimiento OUT PRODUCTOS.fecha_nacimiento%TYPE,
+
+PR_fecha_contratacion OUT PRODUCTOS.fecha_contratacion%TYPE,
+
+)
+
+AS
+
+BEGIN
+
+SELECT id_empleado,nombre_empleado,apellido_empleado,
+puesto_empleado,direccion_empleado,localidad,estado,
+cod_postal,telefono,fecha_nacimiento,fecha_contratacion
+
+INTO 
+
+PR_id_empleado,PR_nombre_empleado,PR_apellido_empleado,
+PR_puesto_empleado,PR_direccion,PR_empleado,PR_localidad
+,PR_estado,PR_cod_postal,PR_telefono,PR_fecha_nacimiento
+,PR_fecha_contratacion
+
+FROM SCOTT.PRODUCTOS
+
+
+WHERE PR_id_empleado=id_empleado;
+
+EXCEPTION 
+WHEN NO_DATA_FOUND
+THEN
+RAISE_APPLICATION_ERROR(-20008,'PRODUCTO NO REGISTRADO');
+
+END;
+
+
+
