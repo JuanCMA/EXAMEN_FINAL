@@ -137,7 +137,7 @@ WHERE id_categoria=PR_id_categoria;
 
 IF(V_VERIFICAR = 0)
 THEN 
-RAISE_APPLICATION_ERRO(-20002,'NO ENOCONTRAD');
+RAISE_APPLICATION_ERROR(-20002,'NO ENOCONTRAD');
 END IF;
 
 --ACTUALIZANDO
@@ -358,85 +358,28 @@ EXCEPTION
    DBMS_OUTPUT.PUT_LINE('ERROR');
 END;
 
-
---PROCEDIMIENTO ACTUALIZAR
-
-PRECEDURE ACTUALIZAR
-(
-PR_id_categoria1 IN PRODUCTO_CATEGORIA.id_categoria1%TYPE,
-
-PR_id_producto1 IN PRODUCTO_CATEGORIA.id_producto1%TYPE,
-);
- 
-IS
-
-V_VERIFICADOR NUMER :=0;
-
-BEGIN
-
---VERIFICANDO PARA LA ACTUALIZACION CATEGORIA 1
-
-SELECT COUNT(*) INTO V_VERIFICADOR
-
-FROM SCOOT.PRODUCTO_CATEGORIA
-
-WHERE id_categoria1=PR_id_categoria1;
-
-IF(V_VERIFICAR = 0)
-THEN 
-RAISE_APPLICATION_ERRO(-20002,'NO ENOCONTRAD');
-END IF;
-
-
---VERIFICANDO PARA EL PRODUCTO 1
-
-V_VERIFICADOR NUMBER :=0
-
-SELECT COUNT(*) INTO V_VERIFICADOR
-
-FROM SCOOT.PRODUCTO_CATEGORIA
-
-WHERE id_producto=PR_id_producto1;
-
-IF(V_VERIFICAR = 0)
-THEN 
-RAISE_APPLICATION_ERRO(-20002,'NO ENOCONTRAD');
-END IF;
-
---ACTUALIZANDO 
-
-UPDATE SCOTT.PRODUCTO_CATEGORIA 
-SET
-
- id_categoria1 = PR_id_categoria1;
-
- id_producto1  = PR_id_producto1;
-
-
-WHERE 
-
 ------------------
 PAQUETE PRODUCTOS
 ------------------
 
-CREATE OR REPLACE PACKAGE SCOTT.PACK_PRODUCTO_CATEGORIA
+CREATE OR REPLACE PACKAGE SCOTT.PACK_PRODUCTO
 AS
 
 --PROCEDIMIENTO INSERTAR
 
 PROCEDURE INSERTAR(
 
-PR_id_producto IN PRODUCTO.id_producto%TYPE,
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
  
-PR_nombre_producto IN PRODUCTO.nombre_producto%TYPE,
+PR_nombre_producto IN PRODUCTOS.nombre_producto%TYPE,
 
-PR_precio_unitario IN PRODUCTO.precio_unitario%TYPE,
+PR_precio_unitario IN PRODUCTOS.precio_unitario%TYPE,
 
-PR_unidades_en_stock IN  PRODCUTO.unidades_en_stock%TYPE,
+PR_unidades_en_stock IN  PRODCUTOS.unidades_en_stock%TYPE,
 
-PR_unidades_pedida IN PRODUCTO.unidades_pedida%TYPE,
+PR_unidades_pedida IN PRODUCTOS.unidades_pedida%TYPE,
 
-PR_descatalogado IN PRODUCTO.descatalogado%TYPE,
+PR_descatalogado IN PRODUCTOS.descatalogado%TYPE,
 
 PR_RESPUESTA OUT NUMBER,
 
@@ -449,17 +392,17 @@ PR_MENSAJE OUT VARCHAR2
 
 PROCEDURE ACTUALIZAR
 (
-PR_id_producto IN PRODUCTO.id_producto%TYPE,
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
  
-PR_nombre_producto IN PRODUCTO.nombre_producto%TYPE,
+PR_nombre_producto IN PRODUCTOS.nombre_producto%TYPE,
 
-PR_precio_unitario IN PRODUCTO.precio_unitario%TYPE,
+PR_precio_unitario IN PRODUCTOS.precio_unitario%TYPE,
 
-PR_unidades_en_stock IN  PRODCUTO.unidades_en_stock%TYPE,
+PR_unidades_en_stock IN  PRODCUTOS.unidades_en_stock%TYPE,
 
-PR_unidades_pedida IN PRODUCTO.unidades_pedida%TYPE,
+PR_unidades_pedida IN PRODUCTOS.unidades_pedida%TYPE,
 
-PR_descatalogado IN PRODUCTO.descatalogado%TYPE,
+PR_descatalogado IN PRODUCTOS.descatalogado%TYPE,
 
 PR_RESPUESTA OUT NUMBER,
 
@@ -470,7 +413,7 @@ PR_MENSAJE OUT VARCHAR2
 --PROCEDIMIENTO ELIMINAR
 
 PROCEDURE ELIMINAR(
-PR_id_producto IN PRODUCTO.id_producto%TYPE,
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
 
 PR_RESPUESTA OUT NUMBER,
 
@@ -480,7 +423,7 @@ PR_MENSAJE OUT VARCHAR2
 --PROCEDIMIENTO OBTENER
 
 (
-PR_id_producto IN PRODUCTO.id_producto%TYPE,
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
 
 PR_RESPUESTA OUT NUMBER,
 
@@ -488,7 +431,185 @@ PR_MENSAJE OUT VARCHAR2
 
 );
 
-END PACK_PRODUCTO_CATEGORIA;
+END PACK_PRODUCTOS;
+
+
+
+------------------------RESCTRICCIONES
+
+CREATE OR REPLACE PACKAGE BODY SCOTT.PACK_PRODUCTOS
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR(
+
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
+ 
+PR_nombre_producto IN PRODUCTOS.nombre_producto%TYPE,
+
+PR_precio_unitario IN PRODUCTOS.precio_unitario%TYPE,
+
+PR_unidades_en_stock IN  PRODCUTOS.unidades_en_stock%TYPE,
+
+PR_unidades_pedida IN PRODUCTOS.unidades_pedida%TYPE,
+
+PR_descatalogado IN PRODUCTOS.descatalogado%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+IS
+
+V_VERIFICADOR := 0;
+BEGIN
+
+
+SELECT COUNT(*) INTO  V_VERIFICADOR
+
+FROM SCOTT.PRODUCTOS
+
+WHERE id_producto=PR_id_producto;
+
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_ERROR(-20001,'DUPLICADO');
+END IF;
+
+END;
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
+ 
+PR_nombre_producto IN PRODUCTOS.nombre_producto%TYPE,
+
+PR_precio_unitario IN PRODUCTOS.precio_unitario%TYPE,
+
+PR_unidades_en_stock IN  PRODCUTOS.unidades_en_stock%TYPE,
+
+PR_unidades_pedida IN PRODUCTOS.unidades_pedida%TYPE,
+
+PR_descatalogado IN PRODUCTOS.descatalogado%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+); 
+IS
+
+V_VERIFICADOR := 0 ;
+BEGIN
+
+SELECT INTO V_VERIFICADOR
+
+FROM SCOTT.PRODUCTOS 
+
+WHERE PR_id_producto=id_producto;
+
+IF(V_VERIFICADOR=0) THEN
+
+RAISE_APPLICATION_ERROR(-20002,'DUPLICADO');
+
+
+
+--ACTUALIZANDO 
+
+UPDATE SCOTT.PRODUCTO
+SET
+
+nombre_producto  =  PR_nombre_producto,
+
+precio_unitario = PR_precio_unitario,
+
+unidades_en_stock = PR_unidades_en_stock,
+
+unidades_pedido = PR_unidades_pedido,
+
+descatalogado = PR_descatalogado
+
+WHERE  id_producto=PR_id_producto;
+
+
+EXCEPTION
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPU.PUT_LINE('SIN ACTUALIZAR');
+
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
+
+
+
+END;
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR(
+PR_id_producto IN PRODUCTOS.id_producto%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+);
+
+IS
+
+V_VERIFICADOR := 0;
+
+BEGIN 
+
+SELECT INTO V_VERIFICADOR 
+
+FROM SOCTT.PRODUCTOS;
+
+WHERE id_producto=PR_id_producto;
+
+IF (V_VERIFICADOR=0 )
+THEN
+
+RAISE_APPLICATION_ERROR(-20003,'SIN DATO');
+
+END IF;
+
+--ELIMINANDO REGISTRO
+
+DELETE FROM SCOTT.PRODUCTO
+WHERE id_producto=PR_id_producto;
+
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPU.PUT_LINE('SIN ELIMINAR');
+
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
+
+
+
+END;
+
+
+--FALTA PROCESO OBTENER
+
+
+
+
+
+
+
+
+
+
 
 
 ----------------------------
@@ -555,6 +676,73 @@ PR_MENSAJE OUT VARCHAR2
 );
 
 END PACK_PRODUCTO_PROVEEDORES;
+
+----------------------------------RESTRICCIONES
+
+CREATE OR REPLACE PACKAGE BODY SCOTT.PACK_PRODUCTO_PROVEEDORES
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR(
+
+PR_id_producto2   IN PRODUCTO_PROVEEDORES.id_producto2%TYPE
+
+PR_id_proveedores1 IN PRODUCTO_PROVEEDORES.id_proveedores1%TYPE
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+AS
+
+V_VERIFICADOR := 0; 
+
+BEGIN 
+
+--VERIFICANDO ID PRODUCTO2
+
+    SELECT COUNT(*)  INTO V_VERIFICADOR
+    FROM SCOTT.PRODUCTO_CATEGORIA 
+    WHERE id_producto2=PR_id_producto2;
+
+    IF(V_VERIFICADOR = 0) THEN
+
+      RAISE_APPLICATION_ERROR(-20005,'CODIGO PRODUCTO NO EXISTE NO EXISTE');
+    END IF;
+
+
+
+--VERIFICANDO ID PROVEEDORES1
+
+   V_VERIFICADOR NUMBER :=0;
+
+
+   SELECT COUNT(*)  INTO V_VERIFICADOR
+   FROM SCOTT.PRODUCTO_CATEGORIA 
+   WHERE id_proveedores1=PR_id_proveedores1;
+
+   IF(V_VERIFICADOR = 0) THEN
+
+     RAISE_APPLICATION_ERROR(-20006,'CODIGO PROVEEDORES NO EXISTE');
+   END IF;
+
+-- INSERTANDO EL REGISTRO
+
+   INSERT INTO SCOTT.PRODUCTO_CATEGORIA(id_producto2,id_proveedores1) VALUES
+   (PR_id_produco2,PR_id_proveedores1);
+
+EXCEPTION 
+   WHEN NO_DATA_FOUND THEN
+   DBMS_OUTPU.PUT_LINE('SIN INSERTAR');
+
+   WHEN OTHERS THEN
+   DBMS_OUTPUT.PUT_LINE('ERROR');
+END;
+
+
 
 ------------------
 PAQUETE PROVEEDORES
@@ -651,6 +839,203 @@ PR_MENSAJE OUT VARCHAR2
 
 END PACK_PROVEEDORES;
 
+---------------------------------------------RESTRICCIONES
+
+CREATE OR REPLACE PACKAGE BODY SCOTT.PACK_PROVEEDORES
+
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR
+(
+
+PR_id_proveedores IN PROVEEDORES.id_proveedores%TYPE,
+
+PR_nombre_proveedor  IN PROVEEDORES.nombre_proveedor%TYPE,
+
+PR_nombre_contacto IN PROVEEDORES.nombre_contacto%TYPE,
+
+PR_puesto_contacto IN PROVEEDORES.puesto_contacto%TYPE,
+
+PR_direccion IN PROVEEDORES.direccion%TYPE,
+
+PR_localidad IN PROVEEDORES.localidad%TYPE,
+
+PR_estado IN PROVEEDORES.estado%TYPE,
+
+PR_cod_postal IN PROVEEDORES.cod_postal%TYPE,
+
+PR_telefono IN PROVEEDORES.telefono%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+IS
+
+
+V_VERIFICADOR :=0;
+
+BEGIN 
+
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.PROVEEDORES
+WHERE PR_id_proveedores=id_proveedores;
+
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_END(-20001,'ESTA DUPLICADO')
+END IF;
+
+--INSERTANDO DATOS
+
+INSERT INTO  SCOTT.PROVEEDORES(id_proveedores,nombre_proveedor,nombre_contacto,puesto_contacto
+direccion,localidad,estado,cod_postal,telefono) 
+VALUES(PR_id_proveedores,PR_nombre_proveedor,PR_nombre_contacto,PR_puesto_contacto,PR_direccion
+,PR_localidad,PR_estado,PR_cod_postal,PR_telefono);
+
+
+
+EXCEPTION
+
+ WHEN NO_DATA_FOUND THEN
+   DBMS_OUTPU.PUT_LINE('SIN INSERTAR');
+
+   WHEN OTHERS THEN
+   DBMS_OUTPUT.PUT_LINE('ERROR');
+END;
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+
+PR_id_proveedores IN PROVEEDORES.id_proveedores%TYPE,
+
+PR_nombre_proveedor  IN PROVEEDORES.nombre_proveedor%TYPE,
+
+PR_nombre_contacto IN PROVEEDORES.nombre_contacto%TYPE,
+
+PR_puesto_contacto IN PROVEEDORES.puesto_contacto%TYPE,
+
+PR_direccion IN PROVEEDORES.direccion%TYPE,
+
+PR_localidad IN PROVEEDORES.localidad%TYPE,
+
+PR_estado IN PROVEEDORES.estado%TYPE,
+
+PR_cod_postal IN PROVEEDORES.cod_postal%TYPE,
+
+PR_telefono IN PROVEEDORES.telefono%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+IS
+V_VERIFICADOR :=0;
+
+BEGIN
+
+SELECT COUNT(*) INTO V_VERIFICADO
+FROM SOCTT.PROVEEDORES
+WHERE PR_id_proveedores=id_proveedores;
+
+IF(V_VERIFICADOR=0) THEN
+RAISE_APPLICATION_END(-20002,'NO SE PUEDE ACTUALIZAR');
+END IF;
+
+--ACTUALIZANDO
+
+UPDATE SCOTT.PROVEEDORES
+
+SET
+
+nombre_proveedor = PR_nombre_proveedor,
+
+nombre_contacto =  PR_nombre_contacto,
+
+puesto_contacto = PR_puesto_contacto,
+
+direccion = PR_direccion,
+
+localidad =PR_localidad,
+ 
+estado =PR_estado,
+
+cod_postal = PR_cod_postal,
+
+telefono = PR_telefono
+ 
+WHERE PR_id_proveedores=id_proveedores;
+
+EXCEPCION
+WHERE NO_DATA_FOUND
+DBMS_OUTPUT.PUT_LINE('NO ACTUALIZADO');
+WHERE OTHERS THEN
+DBMS_OUTPUT.PUT_LINES('ERROR');
+
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR
+(
+
+PR_id_proveedores IN PROVEEDORES.id_proveedores%TYPE,
+
+PR_RESPUESTA OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+IS
+
+V_VERIFICADOR
+BEGIN
+
+SELECT  COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.PROVEEDORES
+WHERE PR_id_proveedores=id_proveedores;
+
+IF(V_VERIFICADOR=0)
+THEN
+RAISE_APPLICATIO_END(-20003,'NO EXISTE');
+END IF;
+
+--ELIMINANDO
+
+
+DELETE  FROM SCOTT.PROVEEDORES
+WHERE PR_id_proveedores=id_proveedores;
+
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND
+DBMS_OUTPU.PUT_LINE('NO ENCONTRADO');
+WHEN OTHERS THEN('ERROR');
+
+END;
+
+--FALTA OTRO
+
+
+
+
+
+
+
+
+
+
+
+
 ------------------
 PAQUETE CLIENTE
 ------------------
@@ -745,6 +1130,69 @@ PR_MENSAJE OUT VARCHAR2
 );
 
 END PACK_CLIENTE;
+
+--------------------------RESTRICCIONES
+
+CREATE OR REPLACE PACKAGE SCOTT.PACK_CLIENTE
+
+AS
+
+--PROCEDIMIENTO INSERTAR
+
+PROCEDURE INSERTAR
+(
+
+PR_id_cliente IN CLIENTE.id_cliente%TYPE,
+
+PR_nombre_cliente IN CLIENTE.nombre_cliente%TYPE,
+
+PR_apellido_cliente IN CLIENTE.apellido_cliente%TYPE,
+
+PR_direccion_cliente IN CLIENTE.direccion_cliente%TYPE,
+
+PR_localidad_cliente IN CLIENTE.localidad_cliente%TYPE
+
+PR_region_cliente IN CLIENTE.region_cliente%TYPE,
+
+PR_cos_postal_cliente IN CLIENTE.cos_postal_cliente%TYPE,
+
+PR_pais_cliente IN CLIENTE.pais_cliente%TYPE,
+
+PR_Telefono_cliente IN CLIENTE.Telefono_cliente%TYPE
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+IS
+
+V_VERIFICADOR:=0;
+BEGIN
+
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.CLIENTE
+WHERE PR_id_cliente=id_cliente;
+
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_END(-20001,'DUPLICADO');
+END IF;
+--INSERTANDO DATOS
+INSERT INTO SCOTT.CLIENTE(nombre_cliente,apellido_cliente,direccion_cliente,localidad_cliente
+,region_cliente,cos_postal_cliente,pais_cliente,Telefono_cliente)
+VALUES(PR_nombre_cliente,PR_apellido_cliente,PR_direccion_cliente,PR_localidad_cliente,PR_region_cliente
+,PR_cos_postal_cliente,PR_pais_cliente,PR_Telefono_cliente);
+
+
+
+
+
+
+
+
+
+END;
 
 
 ------------------
