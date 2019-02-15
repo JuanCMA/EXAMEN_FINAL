@@ -1184,15 +1184,135 @@ INSERT INTO SCOTT.CLIENTE(nombre_cliente,apellido_cliente,direccion_cliente,loca
 VALUES(PR_nombre_cliente,PR_apellido_cliente,PR_direccion_cliente,PR_localidad_cliente,PR_region_cliente
 ,PR_cos_postal_cliente,PR_pais_cliente,PR_Telefono_cliente);
 
-
-
-
-
+EXCEPTION
+WHEN NO_DATA_FOUND
+DBMS_OUTPUT.PUT_LINE('SIN ENCONTRAR');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
 
 
 
 
 END;
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR
+(
+
+PR_id_cliente IN CLIENTE.id_cliente%TYPE,
+
+PR_nombre_cliente IN CLIENTE.nombre_cliente%TYPE,
+
+PR_apellido_cliente IN CLIENTE.apellido_cliente%TYPE,
+
+PR_direccion_cliente IN CLIENTE.direccion_cliente%TYPE,
+
+PR_localidad_cliente IN CLIENTE.localidad_cliente%TYPE
+
+PR_region_cliente IN CLIENTE.region_cliente%TYPE,
+
+PR_cos_postal_cliente IN CLIENTE.cos_postal_cliente%TYPE,
+
+PR_pais_cliente IN CLIENTE.pais_cliente%TYPE,
+
+PR_Telefono_cliente IN CLIENTE.Telefono_cliente%TYPE
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+IS
+V_VERIFICADOR := 0;
+
+BEGIN
+
+
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.CLIENTE
+WHERE PR_id_cliente=id_cliente;
+
+IF(V_VERIFICADOR=0)
+THEN
+RAISE_APPLICATION_END(-20002,'NO EXISTE');
+END IF;
+--ACTUALIZANDO
+
+nombre_cliente =PR_nombre_cliente,
+
+apellido_cliente =PR_apellido_cliente,
+
+direccion_cliente =PR_direccion_cliente,
+
+localidad_cliente = PR_localidad_cliente,
+
+region_cliente   = PR_region_cliente,
+
+cos_postal_cliente = PR_cos_postal_cliente,
+
+pais_cliente = PR_pais_cliente,
+
+Telefono_cliente = Telefono_cliente
+
+WHERE PR_id_cliente=id_cliente;
+
+
+EXCEPTION
+WHEN NO_DATA_FOUND
+DBMS_OUTPUT.PUT_LINES('SIN CODIGO');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINES('ERRO');
+
+END;
+
+--PROCEDIMIENTO ELIMINAR
+
+PROCEDURE ELIMINAR
+(
+
+PR_id_cliente IN CLIENTE.id_cliente%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+PR_MENSAJE OUT VARCHAR2
+
+);
+
+IS
+
+V_VERIFICADOR := 0;
+
+BEGIN
+
+
+SELECT COUNT(*) INTO V_VERIFICADOR 
+FROM COTT.CLIENTE
+WHERE PR_id_cliente=id_cliente;
+IF(V_VERIFICADOR=0)
+RAISE_APPLICATION_END(-20003,'NO EXISTE');
+END IF;
+
+
+--ELIMINANDO
+
+DELETE FORM SCOTT.CLIENTE
+WHERE PR_id_cliente=id_cliente;
+
+EXCEPTION
+WHEN NO_DATA_FOUND
+DBMS_OUTPUT.PUT_LINE('NO PERTENECE');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINES('ERROR');
+
+
+END;
+
+
+----FALTA OBTENER
+
+
+
 
 
 ------------------
@@ -1285,6 +1405,146 @@ P_MENSAJE OUT VARCHAR2
 );
 
 END PACK_PEDIDOS;
+
+------------------------------------RESTRICCIONES
+
+CREATE OR REPLACE PACKAGE BODY  SCOTT.PACK_PEDIDOS
+AS
+
+--PROCEDIMIENTO INSERTAR 
+
+PROCEDURE INSERTAR
+(
+
+PR_id_pedido IN PEDIDOS.id_pedido%TYPE,
+
+PR_id_cliente1 IN PEDIDOS.id_cliente1%TYPE,
+
+PR_id_empleado1 IN PEDIDOS.id_empleado1%TYPE,
+
+PR_fecha_pedido IN PEDIDOS.fecha_pedido%TYPE,
+
+PR_fecha_envio IN PEDIDOS.fecha_envio%TYPE,
+
+PR_ruta_envio IN PEDIDOS.ruta_envio%TYPE,
+
+PR_FECHA_OBJETIVA IN PEDIDOS.FECHA_OBJETIVA%TYPE,
+
+PR_id_transportista1 IN PEDIDOS.id_transportista1%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+
+);
+
+
+AS
+
+
+V_VERIFICADOR := 0;
+
+BEGIN
+
+--DUPLICACION DE ID PEDIDO
+
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.PEDIDOS
+WHERE PR_id_pedido=id_pedido;
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_END(-20002,'DUPLICADO');
+END IF;
+
+--VERIFICACION ID CLIENTE
+V_VERIFICADOR := 0;
+
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.PEDIDOS
+WHERE PR_id_cliente1=id_cliente1;
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_END(-20002,'DUPLICADO');
+END IF;
+
+--VERIFICACION ID EMPLEADO
+
+V_VERIFICADOR := 0;
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.PEDIDOS
+WHERE PR_id_empleado1=id_empleado1;
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_END(-20002,'DUPLICADO');
+END IF;
+
+--VERIFICACION ID TRANSPORTISTA
+
+V_VERIFICADOR := 0;
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.PEDIDOS
+WHERE PR_id_transportista1=id_transportista1;
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_END(-20002,'DUPLICADO');
+END IF;
+
+--INSERTANDO DATOS
+INSERT INTO SCOTT.PEDIDOS (id_pedido,id_cliente,id_empleado,fecha_pedido,fecha_envio,ruta_envio,
+fecha_objetiva,id_transportista)
+VALUES(PR_id_pedido,PR_id_cliente,PR_id_empleado,PR_fecha_pedido,PR_fecha_envio,PR_ruta_envio,
+PR_fecha_objetiva,PR_id_transportista);
+
+WHERE PR_id_pedido= id_pedido;
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND
+DBMS_OUTPUT.PUT_LINE('NO ENCONTRADO');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
+
+END;
+
+--PROCEDIMIENTO ACTUALIZAR
+
+PROCEDURE ACTUALIZAR 
+(
+
+PR_id_pedido IN PEDIDOS.id_pedido%TYPE,
+
+PR_id_cliente1 IN PEDIDOS.id_cliente1%TYPE,
+
+PR_id_empleado1 IN PEDIDOS.id_empleado1%TYPE,
+
+PR_fecha_pedido IN PEDIDOS.fecha_pedido%TYPE,
+
+PR_fecha_envio IN PEDIDOS.fecha_envio%TYPE,
+
+PR_ruta_envio IN PEDIDOS.ruta_envio%TYPE,
+
+PR_FECHA_OBJETIVA IN PEDIDOS.FECHA_OBJETIVA%TYPE,
+
+PR_id_transportista1 IN PEDIDOS.id_transportista1%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+
+);
+
+
+
+
+
+
+
+
+
+
+
 
 ------------------
 PAQUETE EMPLEADOS
