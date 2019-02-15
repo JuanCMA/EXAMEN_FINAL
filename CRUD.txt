@@ -1535,13 +1535,75 @@ P_MENSAJE OUT VARCHAR2
 
 );
 
+AS
+V_VERIFICADOR :=0;
+BEGIN
 
 
+SELECT COUNT(*) INTO  V_VERIFICADOR
+FROM SCOTT.PEDIDOS
+WHERE PR_id_pedido=id_pedido;
+IF(V_VERIFICADOR>0)
+THEN
+RAISE_APPLICATION_END(-20001,'DUPLICADO');
+END IF;
+--ACTUALIZANDO
+
+fecha_pedido =PR_fecha_pedido,
+
+fecha_envio =PR_fecha_envio,
+
+ruta_envio =PR_ruta_envio,
+
+FECHA_OBJETIVA =PR_FECHA_OJETIVA
+
+WHERE PR_id_pedido=id_pedido;
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND
+DBMS_OUTPUT.PUT_LINE('NO PROCEDE');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
+
+END;
+
+--PROCEDIMIENTO ELIMINAR
+(
+
+PR_id_pedido IN PEDIDOS.id_pedido%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+IS
+V_VERIFICADOR :=0;
+BEGIN 
+
+SELECT COUNT(*) INTO V_VERIFICADOR
+FROM SCOTT.PEDIDOS
+WHERE PR_id_pedido=id_pedido;
+
+IF(V_VERIFICADOR=0)
+THEN
+RAISE_APPLICATION_END(-20003,'NO DISPUESTO');
+END IF
+
+--ELIMINAND
+DELETE FROM SCOTT.PEDIDOS 
+WHERE PR_id_pedido=id_pedido;
+
+EXCEPTION
+WHEN NO_DATA_FOUND
+DBMS_OUTPUTPUT_LINE('NO EXISTE');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('ERROR');
+END;
 
 
-
-
-
+..FALTA ULTIMO
 
 
 
@@ -1645,6 +1707,48 @@ P_MENSAJE OUT VARCHAR2
 );
 
 END PACK_EMPLEADOS;
+
+-------------------------RESTRICCIONES
+
+
+CREATE OR REPLACE BODY PACKAGE SCOTT.PACK_EMPLEADOS
+AS
+
+--PROCEDIMIENTO INSERTAR 
+
+PROCEDURE INSERTAR
+(
+
+PR_id_empleado IN EMPLEADOS.id_empleado%TYPE,
+
+PR_nombre_empleado IN EMPLEADOS.nombre_empleado%TYPE,
+
+PR_apellido_empleado IN EMPLEADOS.apellido_empleado%TYPE,
+
+PR_puesto_empleado IN EMPLEADOS.puesto_empleado%TYPE,
+
+PR_direccion_empleado IN EMPLEADOS.direccion_empleado%TYPE,
+
+PR_localidad IN EMPLEADOS.localidad%TYPE,
+
+PR_estado IN EMPLEADOS.estado%TYPE,
+
+PR_cod_postal IN EMPLEADOS.cod_postal%TYPE,
+
+PR_telefono IN EMPLEADOS.telefono%TYPE,
+
+PR_fecha_nacimiento IN EMPLEADOS.fecha_nacimiento%TYPE,
+
+PR_fecha_contratacion IN EMPLEADOS.fecha_contratacion%TYPE,
+
+PR_RESPUESTA  OUT NUMBER,
+
+P_MENSAJE OUT VARCHAR2
+
+);
+
+
+
 
 -----------------------
 PAQUETE TRANSPORTISTAS
