@@ -1,42 +1,43 @@
-set serveroutput on;
---ACTUALIZANDO
 
-CREATE OR REPLACE PROCEDURE SCOTT.PROC_SIMPLE
-(
-PR_id_producto IN PRODUCTOS.id_producto%TYPE,
-PR_precio_unitario  IN PRODUCTOS.precio_unitario%TYPE
+--TABLA TRANSPORTISTAS 
+CREATE TABLE TRANSPORTISTAS(
+id_transportista NUMBER,
+commpañia VARCHAR2(40),
+contacto VARCHAR2(50),
+direccion VARCHAR2(60),
+localidad VARCHAR2(40),
+estado VARCHAR(15),
+cod_postal NUMBER,
+telefono VARCHAR2(9),
+constraint pk_itrans primary key(id_transportista)
 )
 
+--CREAR UN REGISTRO 
+PROCESO COMPLEJO
+
+
+
+CREATE OR REPLACE PROCEDURE SCOTT.TRANSPORISTA
+(PR_id_transportista IN TRANSPORTISTAS.id_transportista%TYPE)
+
 AS
-PR_unistock   PRODUCTOS.unidades_en_stock%TYPE;
+
+PR_compañia TRANSPORTISTAS.compañia%TYPE
 BEGIN
-SELECT unidades_en_stock into PR_unistock
-FROM PRODUCTOS
-WHERE PR_id_producto=id_producto;
-    IF(PR_unistock<100) THEN
-            UPDATE SCOTT.PRODUCTOS SET precio_unitario=PR_precio_unitario*12
-            WHERE PR_id_producto=id_producto;
-           COMMIT;
-           ELSE
-           raise_application_error(-20004, 'no suficiente');
-    END IF;
+SELECT  compañia into PR_compañia
+FROM TRANSPORTISTAS WHERE PR_id_transportista=id_transportista;
+if(compañia LIKE 'Bus%')
+THEN
+UPDATE SCOTT.TRANSPORTISTAS
+SET PR_compañia = 'NUEVA EMPRESA';
 
-EXCEPTION
-WHEN 
-NO_DATA_FOUND THEN
-DBMS_OUTPUT.PUT_LINE('NO ENCONTRDO');
-WHEN OTHERS THEN
+EXCEPTION 
+WHEN NO_DATA_FOUND
+THEN
+RAISE_APPLICATION_ERROR(-20008,'PRODUCTO NO REGISTRADO');
 
-DBMS_OUTPUT.PUT_LINE('ERROR');
 
 END;
-
-
-BEGIN 
-SCOTT.PROC_SIMPLE(35,50);
-
-END;
-SELECT*FROM SCOTT.PRODUCTOS;
 
 
 
