@@ -97,6 +97,11 @@ THEN
 RAISE_APPLICATION_ERROR(-200001,'CODIGO CATEGORIA DUPLICADO');
 END IF;
 
+--INSERTANDO 
+INSERT INTO (id_categoria ,nombre_categoria,descripcion)
+VALUES(PR_id_categoria,PR_nombre_categoria,PR_descripcion);
+ 
+
 EXCEPTION
 
 WHEN NO_DATA_FOUND THEN
